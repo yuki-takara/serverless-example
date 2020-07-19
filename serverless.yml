@@ -61,6 +61,41 @@ provider:
 #    - exclude-me.js
 #    - exclude-me-dir/**
 
+custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: jankens
+            sources: [./migrations/jankens.json]
+
+resources:
+  Resources:
+    JankensTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: jankens
+        AttributeDefinitions:
+          - AttributeName: player
+            AttributeType: S
+          - AttributeName: unixtime
+            AttributeType: N
+        KeySchema:
+          - AttributeName: player
+            KeyType: HASH
+          - AttributeName: unixtime
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
 functions:
   hello:
     handler: handler.hello
