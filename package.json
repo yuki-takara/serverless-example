@@ -1,0 +1,25 @@
+{
+  "name": "serverless-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "aws-sdk": "^2.715.0",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.5.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/yuki-takara/serverless-example.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuki-takara/serverless-example/issues"
+  },
+  "homepage": "https://github.com/yuki-takara/serverless-example#readme"
+}
