@@ -24,9 +24,18 @@ plugins:
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+# awsに対する設定
 provider:
   name: aws
+  region: ap-northeast-1
   runtime: nodejs12.x
+  # DynamoDBと接続するために必要
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'dynamodb:PutItem'
+        - 'dynamodb:Scan'
+      Resource: '*'
 
 # you can overwrite defaults here
 #  stage: dev
@@ -61,6 +70,13 @@ provider:
 #    - exclude-me.js
 #    - exclude-me-dir/**
 
+package:
+  # S3にアップロードしてくれる際除外してくれる
+  exclude:
+    - node_modules/**
+    - migrations/**
+    - .git/**
+
 custom:
   dynamodb:
     stages:
@@ -75,6 +91,31 @@ custom:
         sources:
           - table: jankens
             sources: [./migrations/jankens.json]
+      # sls dynamodb seed --online --region ap-northeast-1 のようにしてseedする事も可能
+      domain:
+        sources:
+          - table: jankens
+            sources: [./migrations/jankens.json]
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+  playJanken:
+    handler: handler.playJanken
+    events:
+      - http:
+          path: jankens
+          method: post
+  listJankens:
+    handler: handler.listJankens
+    events:
+      - http:
+          path: jankens
+          method: get
 
 resources:
   Resources:
@@ -96,9 +137,6 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-functions:
-  hello:
-    handler: handler.hello
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
